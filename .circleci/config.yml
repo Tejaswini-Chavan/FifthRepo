@@ -38,9 +38,9 @@ jobs:
           name: "Upload Coverage"
           command: |
             find .
-            JACOCO_SOURCE_PATH="/home/circleci/repo/order-service/order-service/src/main/java /home/circleci/repo/order-service-consumer/order-service-consumer/src/main/java" ./cc-test-reporter -d \
-              ##format-coverage order-service/order-service/target/my-reports/jacoco.xml order-service-consumer/order-service-consumer/target/my-reports/jacoco.xml     \
-              ./cc-test-reporter format-coverage --input-type jacoco
+            JACOCO_SOURCE_PATH="/home/circleci/repo/order-service/order-service/src/main/java /home/circleci/repo/order-service-consumer/order-service-consumer/src/main/java" ./cc-test-reporter \
+              format-coverage [order-service/order-service/target/my-reports/jacoco.xml, order-service-consumer/order-service-consumer/target/my-reports/jacoco.xml]     \
+              #format-coverage --input-type jacoco
               #--add-prefix order-service/order-service
             ./cc-test-reporter upload-coverage
 
