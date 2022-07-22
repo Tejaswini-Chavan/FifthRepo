@@ -38,11 +38,12 @@ jobs:
           name: "Sum Test Coverage"
           command: |
             JACOCO_SOURCE_PATH=/home/circleci/repo/order-service/order-service/src/main/java ./cc-test-reporter \
-              format-coverage order-service/order-service/target/my-reports/jacoco.xml --input-type jacoco
+              format-coverage order-service/order-service/target/my-reports/jacoco.xml --input-type jacoco --output coverage/codeclimate.order_service.json
             JACOCO_SOURCE_PATH=/home/circleci/repo/order-service-consumer/order-service-consumer/src/main/java ./cc-test-reporter \
-              format-coverage order-service-consumer/order-service-consumer/target/my-reports/jacoco.xml --input-type jacoco
+              format-coverage order-service-consumer/order-service-consumer/target/my-reports/jacoco.xml --input-type jacoco --output coverage/codeclimate.order_service_consumer.json
+            ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2 -o coverage/codeclimate.total.json
             find .
-            ./cc-test-reporter upload-coverage
+            ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
