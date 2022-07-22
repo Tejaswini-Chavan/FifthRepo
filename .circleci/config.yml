@@ -24,7 +24,7 @@ jobs:
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - run:
-          name: Run tests
+          name: Run Order Service tests
           command: |
             #sudo docker-php-ext-enable xdebug
             ./cc-test-reporter before-build
@@ -33,11 +33,13 @@ jobs:
             mvn -f ./order-service/order-service/pom.xml test
             mvn -f ./order-service-consumer/order-service-consumer/pom.xml test
       - store_artifacts:
-          path: target 
+          path: target
+      - store_test_results:
+          path: test-results 
       - run:
           name: "Upload Coverage"
           command: |
-            find .
+            find ./../
             JACOCO_SOURCE_PATH="/home/circleci/repo/order-service/order-service/src/main/java /home/circleci/repo/order-service-consumer/order-service-consumer/src/main/java" ./cc-test-reporter \
               format-coverage order-service/order-service/target/my-reports/jacoco.xml order-service-consumer/order-service-consumer/target/my-reports/jacoco.xml --input-type jacoco --debug
               #--add-prefix order-service/order-service
