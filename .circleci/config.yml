@@ -24,7 +24,7 @@ jobs:
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - run:
-          name: Run tests
+          name: Run Tests
           command: |
             #sudo docker-php-ext-enable xdebug
             ./cc-test-reporter before-build
@@ -33,16 +33,17 @@ jobs:
             mvn -f ./order-service/order-service/pom.xml test
             mvn -f ./order-service-consumer/order-service-consumer/pom.xml test
       - store_artifacts:
-          path: target 
+          path: target
       - run:
-          name: "Upload Coverage"
+          name: "Sum Test Coverage"
           command: |
+            JACOCO_SOURCE_PATH=/home/circleci/repo/order-service/order-service/src/main/java ./cc-test-reporter \
+              format-coverage order-service/order-service/target/my-reports/jacoco.xml --input-type jacoco --output coverage/codeclimate.order_service.json
+            JACOCO_SOURCE_PATH=/home/circleci/repo/order-service-consumer/order-service-consumer/src/main/java ./cc-test-reporter \
+              format-coverage order-service-consumer/order-service-consumer/target/my-reports/jacoco.xml --input-type jacoco --output coverage/codeclimate.order_service_consumer.json
+            ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2 -o coverage/codeclimate.total.json
             find .
-            JACOCO_SOURCE_PATH="/home/circleci/repo/order-service/order-service/src/main/java /home/circleci/repo/order-service-consumer/order-service-consumer/src/main/java" ./cc-test-reporter \
-              format-coverage order-service/order-service/target/my-reports/jacoco.xml order-service-consumer/order-service-consumer/target/my-reports/jacoco.xml     \
-              --input-type jacoco \
-              #--add-prefix order-service/order-service
-            ./cc-test-reporter upload-coverage
+            ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
