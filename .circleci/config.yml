@@ -31,14 +31,15 @@ jobs:
             #sudo vendor/bin/phpunit --coverage-clover clover.xml
             #cd ./XmartApp/XmartApp
             mvn -f ./order-service/order-service/pom.xml test
+            mvn -f ./order-service-consumer/order-service-consumer/pom.xml test
       - store_artifacts:
           path: target 
       - run:
           name: "Upload Coverage"
           command: |
             find .
-            JACOCO_SOURCE_PATH=/home/circleci/repo/order-service/order-service/src/main/java ./cc-test-reporter \
-              format-coverage order-service/order-service/target/my-reports/jacoco.xml     \
+            JACOCO_SOURCE_PATH="/home/circleci/repo/order-service/order-service/src/main/java /home/circleci/repo/order-service-consumer/order-service-consumer/src/main/java" ./cc-test-reporter \
+              format-coverage order-service/order-service/target/my-reports/jacoco.xml order-service-consumer/order-service-consumer/target/my-reports/jacoco.xml     \
               --input-type jacoco \
               #--add-prefix order-service/order-service
             ./cc-test-reporter upload-coverage
